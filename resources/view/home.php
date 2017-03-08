@@ -1,5 +1,6 @@
 
 <?php
+include("model/database.php");
 include("resources/partial/_head_preTitle.php");
 ?>
 <title>View:Home</title>
