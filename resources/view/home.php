@@ -2,11 +2,12 @@
 <?php
 include("resources/partial/_head_preTitle.php");
 ?>
-<title>This is the home page</title>
+<title>View:Home</title>
 <?php include("resources/partial/_head_PostTitle.php"); ?>
 
 <div class="jumbotron">
-  <h1>Hello World!</h1>
+  <h1>This is the home page</h1>
+  <p>This is to dimonstrate the usefullness of includes and views.</p>
 </div>
 
 <?php include("resources/partial/_end_Page.php") ?>
