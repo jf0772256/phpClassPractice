@@ -6,7 +6,7 @@
   $database = 'phpClasses';
   $dbuser = 'phpClases';
   $dbuserpw = 'test1234';
-  //$db_Prefix = '';
+  $db_Prefix = '';
   //now I want to see that the connection has been made.
   $db = new DatabaseClass($host, $database, $dbuser, $dbuserpw);
 

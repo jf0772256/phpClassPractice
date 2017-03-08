@@ -11,8 +11,8 @@ class DatabaseClass
   private $dbuserpassword;
   private $dbtableprefix;
   private $dbport;
-  protected $dbCon;
-  public function __construct($ndbhost = "localhost", $ndbname = "", $ndbusername = "", $ndbuserpassword = "", $ndbtableprefix = " ", $ndbport = "3600")
+  protected $dbC;
+  public function __construct($ndbhost = "localhost", $ndbname = "", $ndbusername = "", $ndbuserpassword = "", $ndbtableprefix = " ", $ndbport = 3600)
   {
     $this->dbhost = $ndbhost; // Default = localhost
     $this->dbname = $ndbname; // Default = None
@@ -20,17 +20,18 @@ class DatabaseClass
     $this->dbuserpassword = $ndbuserpassword; // Default = None
     $this->dbtableprefix = $ndbtableprefix; //Default = None sets the prefix before the table name so that it can be used with the same db with different tables.
     $this->dbport = $ndbport; // Default  = 3600
-    @ $dbC = new mysqli($this->dbhost, $this->dbusername, $this->dbuserpassword, $this->dbname);
-    $this->dbCon = $dbC;
-    if ($this->dbCon->connect_error) {
+    //echo var_dump($this->dbport);
+    @ $this->dbC = new mysqli($this->dbhost, $this->dbusername, $this->dbuserpassword, $this->dbname);//, $this->dbport);
+    //$this->dbCon = $dbC;
+    if ($this->dbC->connect_error) {
       //catch error connecting.
-      die("There was a connection error while attempting to connect to the database " . $this->dbname . " on " . $this->dbhost . ":" . $this->dbport . ". The following is the error that we received back: " . $this->dbCon->connect_errno . ": " . $this->dbCon->connect_error . "\nPlease correct this issue, if you need assistance see your database or IT administrator.");
+      die("There was a connection error while attempting to connect to the database " . $this->dbname . " on " . $this->dbhost . ":" . $this->dbport . ". The following is the error that we received back: <strong>" . $this->dbC->connect_errno . ": " . $this->dbC->connect_error . "</strong>\n Please correct this issue, if you need assistance see your database or IT administrator.");
     }else{
-      echo "Connected to " . $this->dbname . " on " . $this->dbhost . ":" . $this->dbport;
+      //echo "Connected to " . $this->dbname . " on " . $this->dbhost . ":" . $this->dbport;
     }
   }
   public function __destruct(){
-    $this->dbCon->close();
+    @ $this->dbC->close();
   }
   // get properties All but the prefix are unchangable until a new connection is made.
   public function getHost(){
