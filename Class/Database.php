@@ -18,6 +18,8 @@ class DatabaseClass
     if ($dbC -> connect_error) {
       //catch error connecting.
       die("There was a connection error while attempting to connect to the database " . $this->$dbname . " on " . $this->$dbhost . ":" . $this->$dbport . ". The following is the error that we received back: " . $dbC->connect_errno . ": " . $dbC->connect_error . "\nPlease correct this issue, if you need assistance see your database or IT administrator.");
+    }else{
+      echo "Connected to " . $this->$dbname . " on " . $this->$dbhost . ":" . $this->$dbport;
     }
   }
   public function __destruct(){
