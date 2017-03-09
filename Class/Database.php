@@ -56,6 +56,35 @@ class DatabaseClass
   public function setDBPrefix($prefixValue){
     $this->dbtableprefix = $prefixValue;
   }
+
+  //now for other workhorses
+  public function checkConnection(){
+    return mysqli_ping($this->dbC);
+  }
+
+  public function create_newTable($tableName, $tableParams){
+    //Table name expects a valid string, Table params requires an array, minus commas of strings for each column in the table.
+    if (!is_array($tableParams)){
+      throw new ErrorException("Expected array of strings.");
+      exit();
+    }else{
+      $query="CREATE TABLE IF NOT EXISTS $tableName (";
+      foreach ($tableParams as $params) {
+        $query = $query . $params . ", ";
+      }
+      //now to crop the last comma off
+      $lenofquery = strlen($query);
+      $query = substr($query, 0, ($lenofquery - 2));
+      $query = $query . ")";
+      $stmnt = $this->dbC->prepare($query);
+      $result = $stmnt->execute();
+      if (!$result){
+
+      }else{
+
+      }
+    }
+  }
 }
 
 ?>
