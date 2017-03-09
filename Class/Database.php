@@ -96,6 +96,20 @@ class DatabaseClass
       return true;
     }
   }
+  public function renameTableName($oldTableName, $newTableName){
+    //assumes that you didnt include the prefix on the newTableName, You will need to have it for oldTableName
+    // uses a simple request to change teh oldTableName to newTableName and prepend the prefix, This can be used individually
+    // we will work on a renaming call for if you change the prefix.
+    $newTableName = $this->dbtableprefix . $newTableName;
+    $query = "RENAME TABLE $oldTableName TO $newTableName";
+    $stmnt = $this->dbC->prepare($query);
+    $result = $stmnt->execute();
+    if (!$result){
+      return false;
+    }else{
+      return true;
+    }
+  }
 }
 
 ?>
