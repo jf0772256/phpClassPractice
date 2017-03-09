@@ -20,9 +20,8 @@ class DatabaseClass
     $this->dbuserpassword = $ndbuserpassword; // Default = None
     $this->dbtableprefix = $ndbtableprefix; //Default = None sets the prefix before the table name so that it can be used with the same db with different tables.
     $this->dbport = $ndbport; // Default  = 3600
-    //echo var_dump($this->dbport);
+    // starting the connection
     @ $this->dbC = new mysqli($this->dbhost, $this->dbusername, $this->dbuserpassword, $this->dbname);//, $this->dbport);
-    //$this->dbCon = $dbC;
     if ($this->dbC->connect_error) {
       //catch error connecting.
       die("There was a connection error while attempting to connect to the database " . $this->dbname . " on " . $this->dbhost . ":" . $this->dbport . ". The following is the error that we received back: <strong>" . $this->dbC->connect_errno . ": " . $this->dbC->connect_error . "</strong>\n Please correct this issue, if you need assistance see your database or IT administrator.");
@@ -65,7 +64,7 @@ class DatabaseClass
   public function create_newTable($tableName, $tableParams){
     //Table name expects a valid string, Table params requires an array, minus commas of strings for each column in the table.
     if (!is_array($tableParams)){
-      throw new ErrorException("Expected array of strings.");
+      throw new ErrorException("Expected array of strings. Review documentation for further information.");
       exit();
     }else{
       $tableName = $this->dbtableprefix . $tableName;
