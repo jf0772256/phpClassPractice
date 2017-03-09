@@ -8,7 +8,7 @@
   $database = 'phpClasses';
   $dbuser = 'phpClases';
   $dbuserpw = 'test1234';
-  
+
   //now I want to see that the connection has been made.
   $db = new DatabaseClass($host, $database, $dbuser, $dbuserpw);
 
@@ -25,6 +25,7 @@
 
   //table createion function returns success or fail.
   try {
+    //create_newTable accepts 2 parameters, the first is the prefixless table name, and the second is the array for the table structure.
     $result = $db->create_newTable("testTableFromClass", $tablecol);
   } catch (Exception $e) {
     $message_error = "Message: " . $e->getMessage();
@@ -37,5 +38,13 @@
   // code to drop table from db
   // $result = $db->dropTableByName("testTableFromClass");
 
+  //rename table due to something like a need, here we only have one table, we can change the prefix.
+  //just remember that the new table name will not need the prefix, but the old table name will.
+
+  //$db->setDBPrefix("");
+  //$result = $db->renameTableName("test_testTableFromClass","jesses_Table");
+
+  //just cleaning up :)
+  // $result = $db->dropTableByName("jesses_Table");
 
 ?>
