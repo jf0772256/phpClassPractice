@@ -21,4 +21,7 @@
   //table createion function returns success or fail.
   $result = $db->create_newTable("testTableFromClass", $tablecol);
 
+  if ($result) {
+    $result = $db->dropTableByName("testTableFromClass");
+  }
 ?>
