@@ -68,20 +68,21 @@ class DatabaseClass
       throw new ErrorException("Expected array of strings.");
       exit();
     }else{
+      $tableName = $this->dbtableprefix . $tableName;
       $query="CREATE TABLE IF NOT EXISTS $tableName (";
       foreach ($tableParams as $params) {
         $query = $query . $params . ", ";
       }
-      //now to crop the last comma off
+      //now to crop the last comma off and add the ending parenthasis
       $lenofquery = strlen($query);
       $query = substr($query, 0, ($lenofquery - 2));
       $query = $query . ")";
       $stmnt = $this->dbC->prepare($query);
       $result = $stmnt->execute();
       if (!$result){
-
+        return false;
       }else{
-
+        return true;
       }
     }
   }
