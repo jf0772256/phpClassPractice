@@ -173,7 +173,18 @@ class DatabaseClass
           $query .= $value . ", ";
         }
         $query = cropStringValue($query,2);
+        if (!empty($whereArray)) {
+          //iterate through the array and put the values to the query
 
+          //check if the group by array is empty and sdo the same... Only orderby can be done with out where clause.
+          if (!empty($groupArray)) {
+            //append to the end of the query string
+          }
+        }
+        if (!empty($orderby)) {
+          //append to the end of the query string.
+        }
+        //return query string to caller to be executed.
       }else{
         // send to connection error page.
         $error_message = "Your connection to the database has either timed out, or you have somehow lost connection to the server. Refresh the page and try again.";
