@@ -12,26 +12,24 @@
   //now I want to see that the connection has been made.
   $db = new DatabaseClass($host, $database, $dbuser, $dbuserpw);
 
-<<<<<<< HEAD
   $db->setDBPrefix("test_");
   echo $db->getDBPrefix();
   echo "<br />";
   echo $db->checkConnection();
-=======
+
   //sets the prefix to the desired value.
   $db->setDBPrefix("test_");
 
   //$broken = "testID INT UNSIGNED NOT NULL AUTO_INCREMENT,testUserName VARCHAR(30) NOT NULL,testFlag TINYINT(1) DEFAULT 1,PRIMARY KEY (testID)"; //shows the break when you try to send wrong data type.
   // Table col uses line by line, just the parameters, like as shown below. Do not use eol commas.
->>>>>>> origin/master
+
   $tablecol = array();
   $tablecol[0] = "testID INT UNSIGNED NOT NULL AUTO_INCREMENT";
   $tablecol[1] = "testUserName VARCHAR(30) NOT NULL";
   $tablecol[2] = "testFlag TINYINT(1) DEFAULT 0";
   $tablecol[3] = "PRIMARY KEY (testID)";
-<<<<<<< HEAD
+
   $db->create_newTable("test", $tablecol);
-=======
 
   //table createion function returns success or fail.
   try {
@@ -57,5 +55,4 @@
   //just cleaning up :)
   // $result = $db->dropTableByName("jesses_Table");
 
->>>>>>> origin/master
 ?>

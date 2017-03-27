@@ -101,9 +101,10 @@ class DatabaseClass
   }
 
   public function renameTableName($oldTableName, $newTableName){
-    //assumes that you didnt include the prefix on the newTableName, You will need to have it for oldTableName
+    //assumes that you didnt include the prefix on the newTableName, Old table name now will add the database prefix. so you wont need to.
     // uses a simple request to change teh oldTableName to newTableName and prepend the prefix, This can be used individually
     // we will work on a renaming call for if you change the prefix.
+    $oldTableName = $this->dbtableprefix . $oldTableName;
     $table_exists = check_preexisting_tables($oldTableName);
     if ($table_exists) {
       $newTableName = $this->dbtableprefix . $newTableName;
