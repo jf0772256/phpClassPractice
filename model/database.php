@@ -5,9 +5,9 @@
   $result=false;
 
   $host = 'localhost';
-  $database = 'phpClasses';
-  $dbuser = 'phpClases';
-  $dbuserpw = 'test1234';
+  $database = 'phpclasses';
+  $dbuser = 'root';
+  $dbuserpw = '';
 
   //now I want to see that the connection has been made.
   $db = new DatabaseClass($host, $database, $dbuser, $dbuserpw);
@@ -29,7 +29,7 @@
   $tablecol[2] = "testFlag TINYINT(1) DEFAULT 0";
   $tablecol[3] = "PRIMARY KEY (testID)";
 
-  $db->create_newTable("test", $tablecol);
+  //$db->create_newTable("test", $tablecol);
 
   //table createion function returns success or fail.
   try {
@@ -54,5 +54,10 @@
 
   //just cleaning up :)
   // $result = $db->dropTableByName("jesses_Table");
+  $table_Name = $db->getDBPrefix() . "testTableFromClass";
+  $selectQuery = ['*'];
+  $fromQuery = ["$table_Name"];
+  $retQuery = $db->build_select_query($selectQuery,$fromQuery);
+  echo var_dump($retQuery);
 
 ?>

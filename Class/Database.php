@@ -73,7 +73,7 @@ class DatabaseClass
         $query = $query . $params . ", ";
       }
       //now to crop the last comma off
-      $query = cropStringValue($query,2);
+      $query = $this->cropStringValue($query,2);
       $query = $query . ")";
       echo var_dump(strlen($query));
       echo var_dump($query);
@@ -156,23 +156,23 @@ class DatabaseClass
     //or column name, and keyword 'DESC' for decending order.
     //failing to send arrays will throw exception!
 
-    if (!isarray($queryArray) || !isarray($tableArray) || !isarray($whereArray) || !isarray($groupArray) || !isarray($orderBY)) {
+    if (!is_array($queryArray) || !is_array($tableArray) || !is_array($whereArray) || !is_array($groupArray) || !is_array($orderBY)) {
       throw new ErrorException("Expected array of strings. Review documentation for further information.");
       exit();
     }else{
-      $still_Connected = checkConnection();
+      $still_Connected = $this->checkConnection();
       if ($still_Connected == 1) {
         //execute query after build
         $query = 'SELECT ';
         foreach ($queryArray as $key => $value) {
           $query .= $value . ", ";
         }
-        $query = cropStringValue($query,2);
+        $query = $this->cropStringValue($query,2);
         $query .= " FROM ";
         foreach ($tableArray as $key => $value) {
           $query .= $value . ", ";
         }
-        $query = cropStringValue($query,2);
+        $query = $this->cropStringValue($query,2);
         if (!empty($whereArray)) {
           //iterate through the array and put the values to the query
 
@@ -185,6 +185,7 @@ class DatabaseClass
           //append to the end of the query string.
         }
         //return query string to caller to be executed.
+        return $query;
       }else{
         // send to connection error page.
         $error_message = "Your connection to the database has either timed out, or you have somehow lost connection to the server. Refresh the page and try again.";
