@@ -81,17 +81,23 @@ class DatabaseClass
       echo var_dump($query);
     }
   }
-  
+
   public function dropTableByName($tableName){
-    $tableName = $this->dbtableprefix . $tableName;
-    $query = "DROP TABLE IF EXISTS $tableName";
-    $stmnt = $this->dbC->prepare($query);
-    $result = $stmnt->execute();
-    if (!$result){
-      return false;
+    $table_exists = check_preexisting_tables($tableName);
+    if ($table_exists) {
+      $tableName = $this->dbtableprefix . $tableName;
+      $query = "DROP $tableName";
+      $stmnt = $this->dbC->prepare($query);
+      $result = $stmnt->execute();
+      if (!$result){
+        return false;
+      }else{
+        return true;
+      }
     }else{
-      return true;
+      return false;
     }
+
   }
 
   public function renameTableName($oldTableName, $newTableName){
