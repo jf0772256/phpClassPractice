@@ -73,9 +73,7 @@ class DatabaseClass
         $query = $query . $params . ", ";
       }
       //now to crop the last comma off
-      $lenofquery = strlen($query);
-      echo var_dump($lenofquery);
-      $query = substr($query, 0, ($lenofquery - 2));
+      $query = cropStringValue($query,2);
       $query = $query . ")";
       echo var_dump(strlen($query));
       echo var_dump($query);
@@ -148,6 +146,48 @@ class DatabaseClass
       include("error/db_error.php");
       exit();
     }
+  }
+
+  public function build_select_query($queryArray, $tableArray, $whereArray=[], $groupArray=[], $orderBY=[]){
+    //builds a query based on arrays sent from caller and that utilize SELECT.
+    //Assumes that all params sent are arrays, queryArray and tableArray are mandetory,
+    //optional arrays are the whereArray, and the groupArray to send special grouping select query statement
+    //orderBY is special, acceptong one or two values in an array, either column name for assencnding ordering
+    //or column name, and keyword 'DESC' for decending order.
+    //failing to send arrays will throw exception!
+
+    if (!isarray($queryArray) || !isarray($tableArray) || !isarray($whereArray) || !isarray($groupArray) || !isarray($orderBY)) {
+      throw new ErrorException("Expected array of strings. Review documentation for further information.");
+      exit();
+    }else{
+      $still_Connected = checkConnection();
+      if ($still_Connected == 1) {
+        //execute query after build
+        $query = 'SELECT ';
+        foreach ($queryArray as $key => $value) {
+          $query .= $value . ", ";
+        }
+        $query = cropStringValue($query,2);
+        $query .= " FROM ";
+        foreach ($tableArray as $key => $value) {
+          $query .= $value . ", ";
+        }
+        $query = cropStringValue($query,2);
+
+      }else{
+        // send to connection error page.
+        $error_message = "Your connection to the database has either timed out, or you have somehow lost connection to the server. Refresh the page and try again.";
+        include ("error/db_error.php");
+        exit();
+      }
+    }
+  }
+
+  protected function cropStringValue($string, $numOfSpaces){
+    //helper function drops numOfSpaces from end of string, and returns the string to calling function
+    $lenOfString = strlen($string);
+    $string = substr($string,0,$lenOfString - $numOfSpaces);
+    return $string;
   }
 }
 

@@ -47,7 +47,7 @@
   // $result = $db->dropTableByName("testTableFromClass");
 
   //rename table due to something like a need, here we only have one table, we can change the prefix.
-  //just remember that the new table name will not need the prefix, but the old table name will.
+  //just remember that the new table name will not need the prefix, but the old table name will only need the prefix added if the prefix is being changed.
 
   //$db->setDBPrefix("");
   //$result = $db->renameTableName("test_testTableFromClass","jesses_Table");
