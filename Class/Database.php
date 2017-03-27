@@ -75,8 +75,8 @@ class DatabaseClass
       //now to crop the last comma off
       $query = $this->cropStringValue($query,2);
       $query = $query . ")";
-      echo var_dump(strlen($query));
-      echo var_dump($query);
+      $stmnt = $this->dbC->prepare($query);
+      $stmnt->execute();
     }
   }
 

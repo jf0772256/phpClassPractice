@@ -13,9 +13,9 @@
   $db = new DatabaseClass($host, $database, $dbuser, $dbuserpw);
 
   $db->setDBPrefix("test_");
-  echo $db->getDBPrefix();
-  echo "<br />";
-  echo $db->checkConnection();
+  //echo $db->getDBPrefix();
+  //echo "<br />";
+  //echo $db->checkConnection();
 
   //sets the prefix to the desired value.
   $db->setDBPrefix("test_");
