@@ -55,9 +55,11 @@
   //just cleaning up :)
   // $result = $db->dropTableByName("jesses_Table");
   $table_Name = $db->getDBPrefix() . "testTableFromClass";
-  $selectQuery = ['*'];
+  $selectQuery = ['testUserName'];
   $fromQuery = ["$table_Name"];
-  $retQuery = $db->build_select_query($selectQuery,$fromQuery);
+  $whereQuery = ['testFlag = 1'];
+  $OrderQuery = ['testUserName','DESC'];
+  $retQuery = $db->build_select_query($selectQuery,$fromQuery,$whereQuery,[],$OrderQuery);
   echo var_dump($retQuery);
 
 ?>

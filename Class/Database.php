@@ -170,7 +170,7 @@ class DatabaseClass
         $query = $this->cropStringValue($query,2);
         $query .= " FROM ";
         foreach ($tableArray as $key => $value) {
-          $query .= $value . ", ";
+          $query .= $value . " , ";
         }
         $query = $this->cropStringValue($query,2);
         if (!empty($whereArray)) {
