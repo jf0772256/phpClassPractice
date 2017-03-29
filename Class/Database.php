@@ -175,14 +175,25 @@ class DatabaseClass
         $query = $this->cropStringValue($query,2);
         if (!empty($whereArray)) {
           //iterate through the array and put the values to the query
-
+          $query .= "WHERE ";
+          foreach ($whereArray as $key => $value) {
+            $query .= $value . " ";
+          }
           //check if the group by array is empty and sdo the same... Only orderby can be done with out where clause.
           if (!empty($groupArray)) {
             //append to the end of the query string
+            $query .= "GROUP BY ";
+            foreach ($groupArray as $key => $value) {
+              $query .= $value . " ";
+            }
           }
         }
         if (!empty($orderby)) {
           //append to the end of the query string.
+          $query .= "ORDER BY ";
+          foreach ($orderBY as $key => $value) {
+            $query .= $value . " ";
+          }
         }
         //return query string to caller to be executed.
         return $query;
