@@ -1,6 +1,7 @@
 <?php
 //this is the database where we are going to be setting up the connection to the database created: phpClases
   require("./Class/Database.php");
+  require("./Class/QueryBuilder.php");
 
   $result=false;
 
@@ -11,8 +12,9 @@
 
   //now I want to see that the connection has been made.
   $db = new DatabaseClass($host, $database, $dbuser, $dbuserpw);
+  $qb = new QueryBuilderClass($host, $database, $dbuser, $dbuserpw);
 
-  $db->setDBPrefix("test_");
+  //$db->setDBPrefix("test_");
   //echo $db->getDBPrefix();
   //echo "<br />";
   //echo $db->checkConnection();
@@ -58,8 +60,16 @@
   $selectQuery = ['testUserName'];
   $fromQuery = ["$table_Name"];
   $whereQuery = ['testFlag = 1'];
+  $groupQuery = [];
   $OrderQuery = ['testUserName','DESC'];
-  $retQuery = $db->build_select_query($selectQuery,$fromQuery,$whereQuery,[],$OrderQuery);
-  echo var_dump($retQuery);
+  $retQuery = $qb->build_select_query($selectQuery,$fromQuery,$whereQuery,$groupQuery,$OrderQuery);
+  echo $retQuery;
+  echo "<br />";
+
+  $table_Name = "testTableFromClass";
+  $update_query = ['testFlag = 0',"testUserName = 'Jesse'"];
+  $whereQuery =['testID = 1'];
+  $retQuery = $qb->build_update_query($table_Name,$update_query,$whereQuery);
+  echo $retQuery;
 
 ?>

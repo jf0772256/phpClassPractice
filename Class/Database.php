@@ -95,7 +95,6 @@ class DatabaseClass
     }else{
       return false;
     }
-
   }
 
   public function renameTableName($oldTableName, $newTableName){
