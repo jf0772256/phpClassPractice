@@ -61,25 +61,6 @@ class DatabaseClass
     return mysqli_ping($this->dbC);
   }
 
-  public function create_newTable($tableName, $tableParams){
-    //Table name expects a valid string, Table params requires an array, minus commas of strings for each column in the table.
-    if (!is_array($tableParams)){
-      throw new ErrorException("Expected array of strings. Review documentation for further information.");
-      exit();
-    }else{
-      $tableName = $this->dbtableprefix . $tableName;
-      $query="CREATE TABLE IF NOT EXISTS $tableName (";
-      foreach ($tableParams as $params) {
-        $query = $query . $params . ", ";
-      }
-      //now to crop the last comma off
-      $query = $this->cropStringValue($query,2);
-      $query = $query . ")";
-      $stmnt = $this->dbC->prepare($query);
-      $stmnt->execute();
-    }
-  }
-
   public function dropTableByName($tableName){
     $table_exists = check_preexisting_tables($tableName);
     if ($table_exists) {
@@ -144,64 +125,6 @@ class DatabaseClass
       $error_message = "An unknown error has occured and we have stopped the script from running further, contact us through your POC.";
       include("error/db_error.php");
       exit();
-    }
-  }
-
-  public function build_select_query($queryArray, $tableArray, $whereArray=[], $groupArray=[], $orderBY=[]){
-    //builds a query based on arrays sent from caller and that utilize SELECT.
-    //Assumes that all params sent are arrays, queryArray and tableArray are mandetory,
-    //optional arrays are the whereArray, and the groupArray to send special grouping select query statement
-    //orderBY is special, acceptong one or two values in an array, either column name for assencnding ordering
-    //or column name, and keyword 'DESC' for decending order.
-    //failing to send arrays will throw exception!
-
-    if (!is_array($queryArray) || !is_array($tableArray) || !is_array($whereArray) || !is_array($groupArray) || !is_array($orderBY)) {
-      throw new ErrorException("Expected array of strings. Review documentation for further information.");
-      exit();
-    }else{
-      $still_Connected = $this->checkConnection();
-      if ($still_Connected == 1) {
-        //execute query after build
-        $query = 'SELECT ';
-        foreach ($queryArray as $key => $value) {
-          $query .= $value . ", ";
-        }
-        $query = $this->cropStringValue($query,2);
-        $query .= " FROM ";
-        foreach ($tableArray as $key => $value) {
-          $query .= $value . " , ";
-        }
-        $query = $this->cropStringValue($query,2);
-        if (!empty($whereArray)) {
-          //iterate through the array and put the values to the query
-          $query .= "WHERE ";
-          foreach ($whereArray as $key => $value) {
-            $query .= $value . " ";
-          }
-          //check if the group by array is empty and sdo the same... Only orderby can be done with out where clause.
-          if (!empty($groupArray)) {
-            //append to the end of the query string
-            $query .= "GROUP BY ";
-            foreach ($groupArray as $key => $value) {
-              $query .= $value . " ";
-            }
-          }
-        }
-        if (!empty($orderby)) {
-          //append to the end of the query string.
-          $query .= "ORDER BY ";
-          foreach ($orderBY as $key => $value) {
-            $query .= $value . " ";
-          }
-        }
-        //return query string to caller to be executed.
-        return $query;
-      }else{
-        // send to connection error page.
-        $error_message = "Your connection to the database has either timed out, or you have somehow lost connection to the server. Refresh the page and try again.";
-        include ("error/db_error.php");
-        exit();
-      }
     }
   }
 
