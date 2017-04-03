@@ -51,11 +51,13 @@ class DatabaseClass
   public function getDBPrefix(){
     return $this->dbtableprefix;
   }
+  protected function getdbconnection(){
+    return $this->dbC;
+  }
   // the one setter property
   public function setDBPrefix($prefixValue){
     $this->dbtableprefix = $prefixValue;
   }
-
   //now for other workhorses
   public function checkConnection(){
     return mysqli_ping($this->dbC);

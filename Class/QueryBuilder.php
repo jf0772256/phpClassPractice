@@ -2,9 +2,11 @@
   //Class for query building.
   Class QueryBuilderClass extends DatabaseClass
   {
+    protected $dbC;
     function __construct($ndbhost = "localhost", $ndbname = "", $ndbusername = "", $ndbuserpassword = "", $ndbtableprefix = " ", $ndbport = 3600){
       //default Constructor
       parent::__construct($ndbhost = "localhost", $ndbname = "", $ndbusername = "", $ndbuserpassword = "", $ndbtableprefix = " ", $ndbport = 3600);
+      $this->dbC = parent::getdbconnection();
     }
 
     // function __destruct(){
@@ -17,16 +19,21 @@
         throw new ErrorException("Expected array of strings. Review documentation for further information.");
         exit();
       }else{
-        $tableName = $this->dbtableprefix . $tableName;
+        $tableName = parent::getDBPrefix() . $tableName;
         $query="CREATE TABLE IF NOT EXISTS $tableName (";
         foreach ($tableParams as $params) {
           $query = $query . $params . ", ";
         }
         //now to crop the last comma off
-        $query = $this->cropStringValue($query,2);
+        $query = parent::cropStringValue($query,2);
         $query = $query . ")";
         $stmnt = $this->dbC->prepare($query);
-        $stmnt->execute();
+        if($stmnt){
+          $stmnt->execute();
+        }else{
+          echo "error: " . $this->dbC->connect_error();
+        }
+
       }
     }
 

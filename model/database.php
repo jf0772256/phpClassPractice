@@ -36,7 +36,7 @@
   //table createion function returns success or fail.
   try {
     //create_newTable accepts 2 parameters, the first is the prefixless table name, and the second is the array for the table structure.
-    $result = $db->create_newTable("testTableFromClass", $tablecol);
+    $result = $qb->create_newTable("testTableFromClass", $tablecol);
   } catch (Exception $e) {
     $message_error = "Message: " . $e->getMessage();
     echo "<div class='well'>";
