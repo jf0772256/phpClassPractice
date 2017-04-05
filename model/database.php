@@ -71,5 +71,11 @@
   $whereQuery =['testID = 1'];
   $retQuery = $qb->build_update_query($table_Name,$update_query,$whereQuery);
   echo $retQuery;
+  echo "<br />";
 
+  $table_Name = "testTableFromClass";
+  $broken_val1 = ["testUserName","testFlag"];
+  $broken_val2 = ["'Jesse'",1];
+  $retQuery = $qb->build_insert_query($table_Name,$broken_val1,$broken_val2);
+  echo $retQuery;
 ?>

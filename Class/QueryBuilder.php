@@ -35,6 +35,7 @@
         $tableName = parent::getDBPrefix() . $tableName;
         $query="CREATE TABLE IF NOT EXISTS $tableName (";
         foreach ($tableParams as $params) {
+          //$params = $this->dbC->real_escape_string($params);
           $query = $query . $params . ", ";
         }
         //now to crop the last comma off
@@ -54,6 +55,10 @@
       //assumes that you didnt include the prefix on the newTableName, Old table name now will add the database prefix. so you wont need to.
       // uses a simple request to change teh oldTableName to newTableName and prepend the prefix, This can be used individually
       // we will work on a renaming call for if you change the prefix.
+
+      //$oldTableName = $this->dbC->real_escape_string($oldTableName);
+      $newTableName = $this->dbC->real_escape_string($newTableName);
+
       $oldTableName = parent::getDBPrefix() . $oldTableName;
       $table_exists = parent::check_preexisting_tables($oldTableName);
       if ($table_exists) {
@@ -72,6 +77,7 @@
     }
 
     public function dropTableByName($tableName){
+      //$tableName = $this->dbC->real_escape_string($tableName);
       $table_exists = parent::check_preexisting_tables($tableName);
       if ($table_exists) {
         $tableName = parent::getDBPrefix() . $tableName;
@@ -105,11 +111,13 @@
           //execute query after build
           $query = 'SELECT ';
           foreach ($queryArray as $key => $value) {
+            //$value = $this->dbC->real_escape_string($value);
             $query .= $value . ", ";
           }
           $query = parent::cropStringValue($query,2);
           $query .= " FROM ";
           foreach ($tableArray as $key => $value) {
+            //$value = $this->dbC->real_escape_string($value);
             $query .= $value . " , ";
           }
           $query = parent::cropStringValue($query,2);
@@ -117,6 +125,7 @@
             //iterate through the array and put the values to the query
             $query .= "WHERE ";
             foreach ($whereArray as $key => $value) {
+              //$value = $this->dbC->real_escape_string($value);
               $query .= $value . " ";
             }
             //check if the group by array is empty and sdo the same... Only orderby can be done with out where clause.
@@ -124,6 +133,7 @@
               //append to the end of the query string
               $query .= "GROUP BY ";
               foreach ($groupArray as $key => $value) {
+                //$value = $this->dbC->real_escape_string($value);
                 $query .= $value . " ";
               }
             }
@@ -132,6 +142,7 @@
             //append to the end of the query string.
             $query .= "ORDER BY ";
             foreach ($orderBY as $key => $value) {
+              //$value = $this->dbC->real_escape_string($value);
               $query .= $value . " ";
             }
           }
@@ -151,7 +162,7 @@
       // expects table name No pefix as it will be automatically added to the table. and an array of strings as update params, as well as a where array to specify condtions to use to update.
       $dbprefix = parent::getDBPrefix();
       if (empty($tableName) || !is_array($updateArray) || !is_array($whereArray)) {
-        //there was an unexpected input paramert rceived and now will throw an error and exit the code.
+        //there was an unexpected input parameter received and now will throw an error and exit the code.
         throw new ErrorException("Expected array of strings. Review documentation for further information.");
         exit();
       }
@@ -159,13 +170,41 @@
       $query = "UPDATE $tableName SET ";
       foreach ($updateArray as $key => $value) {
         // parse array into query.
+        //$value = $this->dbC->real_escape_string($value);
         $query .= $value . ", ";
       }
       $query = parent::cropStringValue($query,2) . " WHERE "; //
       foreach ($whereArray as $key => $value) {
+        //$value = $this->dbC->real_escape_string($value);
         $query .= $value . ", ";
       }
       $query = parent::cropStringValue($query,2);
+      return $query;
+    }
+
+    public function build_insert_query($tableName,$columnArray,$valueArray){
+      //expects table name, array of columns and array of values.
+      if (!is_array($columnArray) || !is_array($valueArray)){
+        throw new ErrorException("Expected arrays, but was unable to parse the values passed to the query builder. Review documentation for further information.");
+        exit();
+      }elseif (empty($tableName) || $tableName == null){
+        throw new ErrorException("Expected the table name and table name was empty or null. Review documentation for further information.");
+        exit();
+      }
+      //$tableName = $this->dbC->real_escape_string($tableName);
+      $tableName = parent::getDBPrefix() . $tableName;
+      $query= "INSERT INTO " . $tableName . " (";
+      foreach ($columnArray as $key => $value) {
+        //$value = $this->dbC->real_escape_string($value);
+        $query .= $value . ", ";
+      }
+      $query = parent::cropStringValue($query,2) . ") VALUES (";
+      foreach ($valueArray as $key => $value) {
+        //$value = $this->dbC->real_escape_string($value);
+        $query .= $value . ", ";
+      }
+      $query = parent::cropStringValue($query,2) . ")";
+
       return $query;
     }
   }
