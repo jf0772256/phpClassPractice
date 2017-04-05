@@ -6,7 +6,7 @@
  
  The code is built to be run as an administration back end. Here is the point -> it is mostly for practice, working with aspects of classes, inheritence, and other fascits of OOP PHP.
  
- ##The options are that you will find commented code as to what is expected with calling things, most of the query builder code expects arrays. 
+ ## The options are that you will find commented code as to what is expected with calling things, most of the query builder code expects arrays. 
  
  When passing values in the builder functions use ['testColumn = "string"'] or ['testColumn = number']. I will continue looking for a way to allow binding values into the queries.
  
