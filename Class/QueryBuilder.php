@@ -3,9 +3,22 @@
   Class QueryBuilderClass extends DatabaseClass
   {
     protected $dbC;
+    private $host;
+    private $dbName;
+    private $dbUser;
+    private $dbPassword;
+    private $tablePrefix;
+    private $dbport;
     function __construct($ndbhost = "localhost", $ndbname = "", $ndbusername = "", $ndbuserpassword = "", $ndbtableprefix = " ", $ndbport = 3600){
       //default Constructor
-      parent::__construct($ndbhost = "localhost", $ndbname = "", $ndbusername = "", $ndbuserpassword = "", $ndbtableprefix = " ", $ndbport = 3600);
+      $this->host = $ndbhost;
+      $this->dbName = $ndbname;
+      $this->dbUser = $ndbusername;
+      $this->dbPassword = $ndbuserpassword;
+      $this->tablePrefix = $ndbtableprefix;
+      $this->dbport = $ndbport;
+
+      parent::__construct($this->host, $this->dbName, $this->dbUser, $this->dbPassword, $this->tablePrefix, $this->dbport);
       $this->dbC = parent::getdbconnection();
     }
 
@@ -34,6 +47,44 @@
           echo "error: " . $this->dbC->connect_error();
         }
 
+      }
+    }
+
+    public function renameTableName($oldTableName, $newTableName){
+      //assumes that you didnt include the prefix on the newTableName, Old table name now will add the database prefix. so you wont need to.
+      // uses a simple request to change teh oldTableName to newTableName and prepend the prefix, This can be used individually
+      // we will work on a renaming call for if you change the prefix.
+      $oldTableName = parent::getDBPrefix() . $oldTableName;
+      $table_exists = parent::check_preexisting_tables($oldTableName);
+      if ($table_exists) {
+        $newTableName = parent::getDBPrefix() . $newTableName;
+        $query = "RENAME TABLE $oldTableName TO $newTableName";
+        $stmnt = $this->dbC->prepare($query);
+        $result = $stmnt->execute();
+        if ($result) {
+          return true;
+        }else{
+          return false;
+        }
+      }else{
+        return false;
+      }
+    }
+
+    public function dropTableByName($tableName){
+      $table_exists = parent::check_preexisting_tables($tableName);
+      if ($table_exists) {
+        $tableName = parent::getDBPrefix() . $tableName;
+        $query = "DROP $tableName";
+        $stmnt = $this->dbC->prepare($query);
+        $result = $stmnt->execute();
+        if (!$result){
+          return false;
+        }else{
+          return true;
+        }
+      }else{
+        return false;
       }
     }
 

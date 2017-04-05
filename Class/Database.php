@@ -21,7 +21,7 @@ class DatabaseClass
     $this->dbtableprefix = $ndbtableprefix; //Default = None sets the prefix before the table name so that it can be used with the same db with different tables.
     $this->dbport = $ndbport; // Default  = 3600
     // starting the connection
-    @ $this->dbC = new mysqli($this->dbhost, $this->dbusername, $this->dbuserpassword, $this->dbname);//, $this->dbport);
+    $this->dbC = new mysqli($this->dbhost, $this->dbusername, $this->dbuserpassword, $this->dbname);//, $this->dbport);
     if ($this->dbC->connect_error) {
       //catch error connecting.
       die("There was a connection error while attempting to connect to the database " . $this->dbname . " on " . $this->dbhost . ":" . $this->dbport . ". The following is the error that we received back: <strong>" . $this->dbC->connect_errno . ": " . $this->dbC->connect_error . "</strong>\n Please correct this issue, if you need assistance see your database or IT administrator.");
@@ -63,44 +63,6 @@ class DatabaseClass
     return mysqli_ping($this->dbC);
   }
 
-  public function dropTableByName($tableName){
-    $table_exists = check_preexisting_tables($tableName);
-    if ($table_exists) {
-      $tableName = $this->dbtableprefix . $tableName;
-      $query = "DROP $tableName";
-      $stmnt = $this->dbC->prepare($query);
-      $result = $stmnt->execute();
-      if (!$result){
-        return false;
-      }else{
-        return true;
-      }
-    }else{
-      return false;
-    }
-  }
-
-  public function renameTableName($oldTableName, $newTableName){
-    //assumes that you didnt include the prefix on the newTableName, Old table name now will add the database prefix. so you wont need to.
-    // uses a simple request to change teh oldTableName to newTableName and prepend the prefix, This can be used individually
-    // we will work on a renaming call for if you change the prefix.
-    $oldTableName = $this->dbtableprefix . $oldTableName;
-    $table_exists = check_preexisting_tables($oldTableName);
-    if ($table_exists) {
-      $newTableName = $this->dbtableprefix . $newTableName;
-      $query = "RENAME TABLE $oldTableName TO $newTableName";
-      $stmnt = $this->dbC->prepare($query);
-      $result = $stmnt->execute();
-      if ($result) {
-        return true;
-      }else{
-        return false;
-      }
-    }else{
-      return false;
-    }
-  }
-
   protected function check_preexisting_tables($tableNameVar){
     //query the database and if the table is there then retun true.
     //if the tables are not created then return false.
@@ -136,6 +98,25 @@ class DatabaseClass
     $string = substr($string,0,$lenOfString - $numOfSpaces);
     return $string;
   }
+
+  public function get_db_version(){
+    // This call will intregrate to the install, this will get the version numbers of the sql server, and deturmine what the server is running and then will
+    //create the tabels for the correct server.
+    $query = "SHOW VARIABLES LIKE '%version%'";
+    $stmnt = $this->dbC->prepare($query);
+    $stmnt->execute();
+    $result = $stmnt->get_result();
+    while ($results = $result->fetch_assoc()) {
+        $version[] = $results;
+    }
+    foreach ($version as $versions) {
+      if ($versions['Variable_name'] == "version_comment") {
+        $ver_name = $versions['Value'];
+      }
+    }
+    return $ver_name;
+  }
+
 }
 
 ?>
