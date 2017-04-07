@@ -1,6 +1,8 @@
 
 <?php
-include("model/database.php");
+//include("model/database.php");
+include "model/qbtest.php";
+
 include("resources/partial/_head_preTitle.php");
 ?>
 <title>View:Home</title>
