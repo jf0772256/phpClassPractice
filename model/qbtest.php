@@ -10,7 +10,7 @@
   $qb = new testQueryBuilder($host, $database, $dbuser, $dbuserpw);
   $qb->setDBPrefix("test_");
 
-  $query = $qb->queryStart("CREATE")->ddlStatement("TABLE")->set_table_name([],"valueTable")->get_query_string();
+  $query = $qb->queryStart("CREATE")->ddlStatement("TABLE")->set_table_name(["valueTable","test_table","third_test"])->get_query_string();
   //$query = $qb->get_query_string();
   echo $query;
 ?>

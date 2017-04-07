@@ -59,33 +59,23 @@ class testQueryBuilder extends DatabaseClass
     return $this;
   }
 
-  public function set_table_name($tablesArray="", $tableVar =""){
-    //tablesArray needs array -> or will fail, it's optional
-    //tableVar needs single value, it to is optional BUT
-    //One or the other MUST be used.
-    if (empty($tablesArray) && empty($tableVar)) {
+  public function set_table_name($tableVar){
+    //tableVar accepts either a string value, or an array of strings of table names
+    if (empty($tableVar)) {
       throw new Exception("Error Processing Request: Expecting an array or a string, none were sent with your request;");
-    }elseif(!empty($tablesArray) && empty($tableVar)) {
-      if (!is_array($tablesArray)) {
-        throw new Exception("Error Processing Request: Expecting an Array containing only strings. If you are wishing to send one table sent an empty array param '[]' followed by your desired table name;");
+    }elseif(!empty($tableVar)) {
+      if (!is_array($tableVar)) {
+        //do string stuff
+        $tableVar = $this->dbC->real_escape_string(htmlspecialchars($tableVar));
+        $this->queryString .= $tableVar;
       }else{
         //do array stuff
-        foreach ($tablesArray as $tName) {
+        foreach ($tableVar as $tName) {
           $tName = $this->dbC->real_escape_string(htmlspecialchars($tName));
           $this->queryString .= $tName . ", ";
         }
         $this->queryString = parent::cropStringValue($this->queryString,2);
       }
-    }elseif(empty($tablesArray) && !empty($tableVar)) {
-      if (!is_string($tableVar)) {
-        throw new Exception("Error Processing Request: Expecting a string value, but something else was passed. Please ensure that you are using a string. If you encounter further trouble please review the documentation;");
-      }else{
-        //do string stuff
-        $tableVar = $this->dbC->real_escape_string(htmlspecialchars($tableVar));
-        $this->queryString .= $tableVar;
-      }
-    }elseif (!empty($tablesArray) && !empty($tableVar)) {
-      throw new Exception("Error Processing Request: Only one value can be accepted, either in array form or in string form, for further information see documentation;");
     }
     return $this;
   }
