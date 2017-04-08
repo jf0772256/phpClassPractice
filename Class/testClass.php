@@ -126,6 +126,18 @@ class testQueryBuilder extends DatabaseClass
   }
   public function ddlStatement_Alter_next($alterCommand){
     // watches for special later commands
+    if ($this->modeVal == "ddl-alterTable-ALTER") {
+      if (!empty($alterCommand)) {
+        if (strtoupper($alterCommand) == "SET" || strtoupper($alterCommand) == "DROP") {
+          $this->queryString .= $this->dbC->real_escape_string(htmlspecialchars(strtoupper($alterCommand))) . " ";
+        }else{
+          throw new Exception("Error Processing Request: No command " . $alterCommand . " exists in ddlStatement_Alter_next() ");
+        }
+      }else{
+        throw new Exception("Error Processing Request: This function cannot accept an empty paramerter ");
+      }
+    }
+    return $this;
   }
 
   public function selectColumn_name($colName, $colDefVal = ""){
@@ -136,7 +148,13 @@ class testQueryBuilder extends DatabaseClass
     }elseif (is_array($colName)){
       if ($this->modeVal == "ddl-alterTable-ADD" || $this->modeVal == "ddl-alterTable-MODIFY" || $this->modeVal == "ddl-alterTable-ALTER") {
         throw new Exception("Error Processing Request: Alter mode does not support multiple columns - use single column string instead ");
-      }else {
+      }elseif ($this->modeVal == "ddl-alterTable-CHANGE"){
+        foreach ($colName as $cName) {
+          $this->queryString .= $this->dbC->real_escape_string(htmlspecialchars($cName)) . " ";
+        }
+        $this->queryString = parent::cropStringValue($this->queryString,1);
+        $this->queryString .= " ";
+      }else{
         foreach ($colName as $cName) {
           $this->queryString .= $this->dbC->real_escape_string(htmlspecialchars($cName)) . ", ";
         }

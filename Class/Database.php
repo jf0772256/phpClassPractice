@@ -114,7 +114,7 @@ class DatabaseClass
         $ver_name = $versions['Value'];
       }
     }
-    return $ver_name;
+    return strtoupper($ver_name);
   }
 
 }
