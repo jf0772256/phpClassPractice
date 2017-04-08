@@ -31,19 +31,19 @@ class testQueryBuilder extends DatabaseClass
 
   public function queryStart($mode){
     // is the start of the query
-    if ($mode == "SELECT") {
+    if (strtoupper($mode) == "SELECT") {
       $this->queryString = "SELECT ";
-    }elseif ($mode == "UPDATE") {
+    }elseif (strtoupper($mode) == "UPDATE") {
       $this->queryString = "UPDATE ";
-    }elseif ($mode == "DELETE") {
+    }elseif (strtoupper($mode) == "DELETE") {
       $this->queryString = "DELETE ";
-    }elseif ($mode == "INSERT") {
+    }elseif (strtoupper($mode) == "INSERT") {
       $this->queryString = "INSERT ";
-    }elseif ($mode == "CREATE") {
+    }elseif (strtoupper($mode) == "CREATE") {
       $this->queryString = "CREATE ";
-    }elseif ($mode == "DROP") {
+    }elseif (strtoupper($mode) == "DROP") {
       $this->queryString = "DROP ";
-    }elseif ($mode == "ALTER") {
+    }elseif (strtoupper($mode) == "ALTER") {
       $this->queryString = "ALTER ";
     }
     return $this;
@@ -57,6 +57,8 @@ class testQueryBuilder extends DatabaseClass
       if ($this->queryString == "CREATE TABLE "){$this->modeVal = "ddl-createTable";}
       if ($this->queryString == "ALTER TABLE ") { $this->modeVal = "ddl-alterTable"; }
       // $this->modeVal = "ddl-createTable";
+    }else{
+      $this->modeVal = "dml-" . $this->queryString;
     }
     return $this;
   }
@@ -101,21 +103,21 @@ class testQueryBuilder extends DatabaseClass
       $alterCommand = $this->dbC->real_escape_string(htmlspecialchars(strtoupper($alterCommand)));
       if ($alterCommand == "ADD") {
         $this->modeVal .= "-ADD";
-        $this->queryString .= $alterCommand;
+        $this->queryString .= $alterCommand . " ";
       }elseif ($alterCommand == "DROP") {
-        $this->queryString .= $alterCommand;
+        $this->queryString .= $alterCommand . " ";
       }elseif ($alterCommand == "CHANGE") {
         $this->modeVal .= "-CHANGE";
-        $this->queryString .= $alterCommand;
+        $this->queryString .= $alterCommand . " ";
       }elseif ($alterCommand == "MODIFY") {
         $this->modeVal .= "-MODIFY";
-        $this->queryString .= $alterCommand;
+        $this->queryString .= $alterCommand . " ";
       }elseif ($alterCommand == "ALTER") {
         $this->modeVal .= "-ALTER";
-        $this->queryString .= $alterCommand;
+        $this->queryString .= $alterCommand . " ";
       }elseif ($alterCommand == "RENAME"){
         $this->modeVal .= "-RENAME";
-        $this->queryString .= $alterCommand;
+        $this->queryString .= $alterCommand . " TO ";
       }else{
         throw new Exception("Error Processing Request: Invalid response received Alter does not have method value " . $alterCommand);
       }
@@ -131,9 +133,38 @@ class testQueryBuilder extends DatabaseClass
     // collects optional colDefVal(s) from a string or array of values.
     if (empty($colName)) {
       throw new Exception("Error Processing Request: ColumnName cannot be empty. May be an array or a string ");
-    }elseif (is_array($colName) && substr($this->modeVal,0,14) == "ddl-alterTable" || substr($this->modeVal,0,15) == "dml-updateTable") {
-      throw new Exception("Error Processing Request: ALTER and UPDATE must be used with ColumnNames being stored in a string not an array ");      
+    }elseif (is_array($colName)){
+      if ($this->modeVal == "ddl-alterTable-ADD" || $this->modeVal == "ddl-alterTable-MODIFY" || $this->modeVal == "ddl-alterTable-ALTER") {
+        throw new Exception("Error Processing Request: Alter mode does not support multiple columns - use single column string instead ");
+      }else {
+        foreach ($colName as $cName) {
+          $this->queryString .= $this->dbC->real_escape_string(htmlspecialchars($cName)) . ", ";
+        }
+        $this->queryString = parent::cropStringValue($this->queryString,2);
+        $this->queryString .= " ";
+      }
+    }elseif (is_string($colName)) {
+      $colName = $this->dbC->real_escape_string(htmlspecialchars($colName));
+      $this->queryString .= $colName . " ";
     }
+    if (!empty($colDefVal)) {  //  mostly used when altering tables/columns
+      if (is_array($colDefVal)) {
+        foreach ($colDefVal as $value) {
+          $value = $this->dbC->real_escape_string(htmlspecialchars($value));
+          $this->queryString .= $value . " ";
+        }
+        $this->queryString = parent::cropStringValue($this->queryString,1);
+      }elseif (is_string($colDefVal)) {
+        $colDefVal = $this->dbC->real_escape_string(htmlspecialchars($colDefVal));
+        $this->queryString .= $colDefVal;
+      }
+    } //if empty do nothing
+
+    if ($this->modeVal == "ddl-createTable") {
+      $this->queryString = parent::cropStringValue($this->queryString,1);
+      $this->queryString .= ")";
+    }
+    return $this;
   }
 }
 ?>
