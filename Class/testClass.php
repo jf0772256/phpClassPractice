@@ -1,8 +1,9 @@
 <?php
 // test class for use of new query builder class idea.
 // include ("Database.php");
+require_once('Interface/DataType.Interface.php');
 
-class testQueryBuilder extends DatabaseClass
+class testQueryBuilder extends DatabaseClass implements DataType
 {
   //create query values and return them as value.
   protected $dbC;

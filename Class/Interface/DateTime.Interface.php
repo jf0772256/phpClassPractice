@@ -1,5 +1,5 @@
 <?php
-interface DateTime {
+interface DateTimeType {
   //I think that this will work...
 }
 ?>
