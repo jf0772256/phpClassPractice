@@ -4,8 +4,8 @@
 
   $host = 'localhost';
   $database = 'phpclasses';
-  $dbuser = 'phpClasses';
-  $dbuserpw = 'test1234';
+  $dbuser = 'root';
+  $dbuserpw = '';
 
   $qb = new testQueryBuilder($host, $database, $dbuser, $dbuserpw);
   $qb->setDBPrefix("test_");
