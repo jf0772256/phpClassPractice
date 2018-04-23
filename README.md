@@ -1,5 +1,7 @@
 # phpClassPractice
 
+### dev will work on this again starting at the end of semester. To intregreate this code into CMS.
+
 ## Using the currently under development test class which will be developed in place of the first QueryBuilderClass:
 
  I used the MySQLi php connector, so in order to access this class you will need to use a variant of MySQL servers.
